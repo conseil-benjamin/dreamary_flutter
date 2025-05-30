@@ -27,6 +27,7 @@ class _LoginFormState extends State<LoginForm> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          Image(image: AssetImage('/images/Dreamary.png')),
           EmailField(onChanged: (val) => email = val),
           PasswordField(onChanged: (val) => password = val),
           ElevatedButton(
