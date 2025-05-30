@@ -1,4 +1,5 @@
 import 'package:dreamary_flutter/features/auth/presentation/pages/login_screen.dart';
+import 'package:dreamary_flutter/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,7 +14,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      onGenerateRoute: AppRoutes.generateRoute,
       theme: ThemeData(
+        useMaterial3: true,
         // This is the theme of your application.
         //
         // TRY THIS: Try running your application with "flutter run". You'll see

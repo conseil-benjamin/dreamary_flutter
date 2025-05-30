@@ -1,17 +1,51 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class PasswordField extends StatelessWidget {
-  final void Function(String) onChanged;
-  const PasswordField({required this.onChanged, super.key});
+// 1. Déclaration du Widget principal
+class PasswordField extends StatefulWidget {
+  final ValueChanged<String> onChanged;
 
+  // Constructeur avec un paramètre requis
+  const PasswordField({Key? key, required this.onChanged}) : super(key: key);
+
+  // Lien vers l'état associé
+  @override
+  _PasswordFieldState createState() => _PasswordFieldState();
+}
+
+// 2. Classe d’état (mutable) du widget
+class _PasswordFieldState extends State<PasswordField> {
+  // 2.1 Variable d'état pour gérer la visibilité du mot de passe
+  bool isObscure = true;
+  String password = '';
+
+  // 2.2 Méthode pour basculer la visibilité
+  void _toggleVisibility() {
+    setState(() {
+      isObscure = !isObscure;
+    });
+  }
+
+  // 2.3 Méthode build : ce qui est affiché à l’écran
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      decoration: InputDecoration(labelText: 'Password'),
-      onChanged: onChanged,
+      obscureText: isObscure, // Utilise la variable d’état
+      decoration: InputDecoration(
+        labelText: 'Mot de passe',
+        prefixIcon: Icon(Icons.lock_outline, color: Theme.of(context).colorScheme.primary),
+        suffixIcon: IconButton(
+          icon: Icon(
+            isObscure ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+          onPressed: _toggleVisibility, // Appelle setState pour changer l’état
+        ),
+        border: OutlineInputBorder(),
+      ),
+      textInputAction: TextInputAction.done,
+      onChanged: widget.onChanged, // Appelle la fonction fournie par le parent
       validator: (value) =>
-      value != null && value.contains('@') ? null : 'Password invalide',
+      value != null && value.length >= 6 ? null : 'Mot de passe invalide',
     );
   }
 }
