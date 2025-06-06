@@ -15,8 +15,13 @@ class _EmailFieldState extends State<EmailField> {
   Widget build(BuildContext context) {
     return TextFormField(
       decoration: InputDecoration(
-          labelText: 'votre@email.com',
-          prefixIcon: Icon(Icons.email_outlined, color: Theme.of(context).colorScheme.primary),
+          label: Text(
+            style: new TextStyle(
+              fontSize: 12,
+            ),
+              'Email'
+          ),
+          prefixIcon: Icon(Icons.email_outlined, color: Theme.of(context).colorScheme.primary, size: 20),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(5),
             borderSide: BorderSide(color: Theme.of(context).colorScheme.error, width: 0.1),
@@ -24,7 +29,7 @@ class _EmailFieldState extends State<EmailField> {
       ),
       style: new TextStyle(
         color: Theme.of(context).colorScheme.primary,
-        fontSize: 5,
+        fontSize: 12,
       ),
       onChanged: widget.onChanged,
       validator: (value) =>

@@ -27,14 +27,15 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      alignment: Alignment.topCenter,
+      padding: const EdgeInsets.all(10),
       margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         color: Colors.white, // 🔹 Couleur de fond
-        border: Border.all(
-          color: Theme.of(context).colorScheme.primary, // 🔹 Couleur de la bordure
-          width: 2,
-        ),
+       // border: Border.all(
+         // color: Theme.of(context).colorScheme.primary, // 🔹 Couleur de la bordure
+         // width: 1,
+        //),
         borderRadius: BorderRadius.circular(16), // 🔹 Coins arrondis
         boxShadow: [
           BoxShadow(
@@ -47,9 +48,8 @@ class _LoginFormState extends State<LoginForm> {
       child: Form(
         key: _formKey,
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const SizedBox(height: 90),
             const Text(
               'Connexion',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),

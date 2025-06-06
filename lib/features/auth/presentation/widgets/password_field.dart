@@ -17,6 +17,7 @@ class _PasswordFieldState extends State<PasswordField> {
   // 2.1 Variable d'état pour gérer la visibilité du mot de passe
   bool isObscure = true;
   String password = '';
+  String labelInput = '*******';
 
   // 2.2 Méthode pour basculer la visibilité
   void _toggleVisibility() {
@@ -31,18 +32,31 @@ class _PasswordFieldState extends State<PasswordField> {
     return TextFormField(
       obscureText: isObscure, // Utilise la variable d’état
       decoration: InputDecoration(
-        labelText: 'Mot de passe',
-        prefixIcon: Icon(Icons.lock_outline, color: Theme.of(context).colorScheme.primary),
+        labelText: labelInput,
+        prefixIcon: Icon(Icons.lock_outline, color: Theme.of(context).colorScheme.primary, size: 20),
         suffixIcon: IconButton(
           icon: Icon(
             isObscure ? Icons.visibility_outlined : Icons.visibility_off_outlined,
             color: Theme.of(context).colorScheme.primary,
           ),
-          onPressed: _toggleVisibility, // Appelle setState pour changer l’état
+          onPressed: _toggleVisibility,
         ),
         border: OutlineInputBorder(),
       ),
-      textInputAction: TextInputAction.done,
+      onTap: () {
+        setState(() {
+          labelInput = 'Mot de passe';
+        });
+      },
+      onTapOutside: (_) {
+        setState(() {
+          labelInput = '*******';
+        });
+      },
+      style: TextStyle(
+        color: Theme.of(context).colorScheme.primary,
+        fontSize: 12,
+      ),
       onChanged: widget.onChanged, // Appelle la fonction fournie par le parent
       validator: (value) =>
       value != null && value.length >= 6 ? null : 'Mot de passe invalide',
