@@ -1,6 +1,5 @@
-import 'package:animate_do/animate_do.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:animate_do/animate_do.dart';
 
 class HeaderLoginSignUp extends StatelessWidget {
   final String title;
@@ -15,28 +14,34 @@ class HeaderLoginSignUp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         FadeInDown(
           child: Image.asset(
             'assets/images/Dreamary.png',
-            height: 75,
-            width: 75,
+            height: 80,
+            width: 80,
             fit: BoxFit.cover,
-            opacity: const AlwaysStoppedAnimation(0.8),
           ),
         ),
+        const SizedBox(height: 20),
         Text(
           title,
-          style: TextStyle(
-            fontSize: 12,
+          style: const TextStyle(
+            fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: Theme.of(context).colorScheme.primary,
           ),
+          textAlign: TextAlign.center,
         ),
-        subtitle.length > 0 ? Text(subtitle) : const SizedBox.shrink(),
+        const SizedBox(height: 8),
+        Text(
+          subtitle,
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.grey[600],
+          ),
+          textAlign: TextAlign.center,
+        ),
       ],
     );
-    throw UnimplementedError();
   }
 }

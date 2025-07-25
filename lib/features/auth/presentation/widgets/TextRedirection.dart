@@ -1,34 +1,35 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class TextRedirection extends StatelessWidget {
   final String text;
   final String subText;
+  final VoidCallback onPressed;
 
   const TextRedirection({
     super.key,
     required this.text,
     required this.subText,
+    required this.onPressed,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(text),
+        Text(text, style: TextStyle(color: Colors.grey[600])),
         TextButton(
-          onPressed: () {
-            text == 'Déjà un compte ?' ? Navigator.pushNamed(context, '/login') : Navigator.pushNamed(context, '/register');
-          },
+          onPressed: onPressed,
+          style: TextButton.styleFrom(
+            foregroundColor: Colors.black,
+          ),
           child: Text(
             subText,
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.primary,
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
             ),
-          )
-        )
+          ),
+        ),
       ],
     );
   }

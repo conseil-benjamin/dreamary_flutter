@@ -1,10 +1,7 @@
-import 'package:dreamary_flutter/features/auth/presentation/widgets/AccountButton.dart';
-import 'package:dreamary_flutter/features/auth/presentation/widgets/account_login.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'email_field.dart';
 import 'password_field.dart';
-import 'package:animate_do/animate_do.dart';
+import 'account_login.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -20,49 +17,51 @@ class _LoginFormState extends State<LoginForm> {
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
-      // Faire appel à l’authentification
+      // Call authentication logic
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      alignment: Alignment.topCenter,
-      padding: const EdgeInsets.all(10),
-      margin: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white, // 🔹 Couleur de fond
-       // border: Border.all(
-         // color: Theme.of(context).colorScheme.primary, // 🔹 Couleur de la bordure
-         // width: 1,
-        //),
-        borderRadius: BorderRadius.circular(16), // 🔹 Coins arrondis
+        color: Colors.grey[50],
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: Offset(0, 4),
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
           ),
         ],
       ),
       child: Form(
         key: _formKey,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const Text(
               'Connexion',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            const Text('Bon retour parmi nous !'),
-            const SizedBox(height: 20),
+            const SizedBox(height: 8),
+            const Text('Bon retour parmi nous !', style: TextStyle(color: Colors.grey)),
+            const SizedBox(height: 24),
             EmailField(onChanged: (val) => email = val),
             const SizedBox(height: 16),
             PasswordField(onChanged: (val) => password = val),
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
             ElevatedButton(
               onPressed: _submit,
-              child: const Text('Se connecter'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.black,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                minimumSize: const Size(double.infinity, 50),
+              ),
+              child: const Text('Se connecter', style: TextStyle(color: Colors.white)),
             ),
             const SizedBox(height: 16),
             const AccountLogin(),
@@ -71,5 +70,4 @@ class _LoginFormState extends State<LoginForm> {
       ),
     );
   }
-
 }

@@ -1,60 +1,77 @@
-import 'package:dreamary_flutter/features/auth/presentation/widgets/Header_login_sign_up.dart';
-import 'package:dreamary_flutter/features/auth/presentation/widgets/TextRedirection.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import '../widgets/login_form.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import '../widgets/Header_login_sign_up.dart';
+import '../widgets/TextRedirection.dart';
+import '../widgets/login_form.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
   Future<UserCredential> signInWithGoogle() async {
-    // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-    // Obtain the auth details from the request
     final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
-
-    // Create a new credential
     final credential = GoogleAuthProvider.credential(
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
-
-    // Once signed in, return the UserCredential
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            HeaderLoginSignUp(title: 'Explorez l\'univers de vos rêves', subtitle: ''),
-            const LoginForm(),
-            const SizedBox(height: 20),
-            TextRedirection(text: 'Pas encore de compte ?', subText: 'Créer un compte'),
-            ElevatedButton(
-              onPressed: () {
-                signInWithGoogle().then((UserCredential userCredential) {
-                  Text("Connexion réussie : ${userCredential.user?.displayName}");
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Connexion réussie : ${userCredential.user?.displayName}')),
-                  );
-                }).catchError((error) {
-                  // Handle error
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Erreur de connexion : $error')),
-                  );
-                  print("Erreur de connexion : $error");
-                });
-              },
-              child: Text('Se connecter avec Google')
-            ),
-          ],
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: Column(
+            children: [
+              const SizedBox(height: 80),
+              const HeaderLoginSignUp(
+                title: 'Explorez l\'univers de vos rêves',
+                subtitle: 'Connectez-vous pour continuer',
+              ),
+              const SizedBox(height: 40),
+              const LoginForm(),
+              const SizedBox(height: 20),
+              TextRedirection(
+                text: 'Pas encore de compte ?',
+                subText: 'Créer un compte',
+                onPressed: () => Navigator.pushNamed(context, '/register'),
+              ),
+              const SizedBox(height: 30),
+              ElevatedButton.icon(
+                onPressed: () {
+                  signInWithGoogle().then((UserCredential userCredential) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Connexion réussie : ${userCredential.user?.displayName}'),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                  }).catchError((error) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Erreur de connexion : $error'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  });
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  elevation: 0,
+                ),
+                icon: const Icon(Icons.login, color: Colors.white),
+                label: const Text('Se connecter avec Google', style: TextStyle(color: Colors.white)),
+              ),
+            ],
+          ),
         ),
       ),
     );

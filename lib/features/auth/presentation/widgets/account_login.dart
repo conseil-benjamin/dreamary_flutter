@@ -1,23 +1,24 @@
-import 'package:dreamary_flutter/features/auth/presentation/widgets/AccountButton.dart';
 import 'package:flutter/material.dart';
+import 'AccountButton.dart';
 
-class AccountLogin extends StatefulWidget {
-    const AccountLogin({Key? key}) : super(key: key);
+class AccountLogin extends StatelessWidget {
+  const AccountLogin({Key? key}) : super(key: key);
 
-    @override
-    State<AccountLogin> createState() => _AccountLoginState();
-}
-
-class _AccountLoginState extends State<AccountLogin> {
-    @override
-    Widget build(BuildContext context) {
-       return Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-                ButtonAccount(text: 'Google',),
-                SizedBox(width: 10),
-                ButtonAccount(text: 'Apple'),
-            ],
-       );
-    }
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      children: [
+        Text('ou connectez-vous avec', style: TextStyle(color: Colors.grey)),
+        SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AccountButton(text: 'Google'),
+            SizedBox(width: 10),
+            AccountButton(text: 'Apple'),
+          ],
+        ),
+      ],
+    );
+  }
 }
