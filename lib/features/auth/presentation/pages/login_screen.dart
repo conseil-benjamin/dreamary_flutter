@@ -44,6 +44,7 @@ class LoginScreen extends StatelessWidget {
               ElevatedButton.icon(
                 onPressed: () {
                   signInWithGoogle().then((UserCredential userCredential) {
+                    Navigator.pushNamed(context, '/add_new_dream');
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Connexion réussie : ${userCredential.user?.displayName}'),

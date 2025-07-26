@@ -30,6 +30,14 @@
           }
         },
         {
+          "client_id": "521876673392-c1agh5a4e0tdm7g2sb43mvtj6o83k1ql.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dreamary_flutter",
+            "certificate_hash": "366e919e3f52dd6544c81ceb043d0e38433b4dc5"
+          }
+        },
+        {
           "client_id": "521876673392-v2vq4kqspmbr20r3o5srukkrrmi2hf1m.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
