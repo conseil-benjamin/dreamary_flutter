@@ -1,475 +1,102 @@
+import 'package:dreamary_flutter/features/newDream/presentation/widgets/dream_themes_card.dart';
+import 'package:dreamary_flutter/styles/themeSwitcher.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../models/dream.dart';
+import '../../../../viewModels/dreamViewModel.dart';
+import '../widgets/dream_characteristics_card.dart';
+import '../widgets/dream_details_card.dart';
+import '../widgets/dream_emotions_card.dart';
+import '../widgets/dream_media_uploader_card.dart';
 
-class AddDreamScreen extends StatefulWidget {
-  @override
-  _AddDreamScreenState createState() => _AddDreamScreenState();
-}
-
-class _AddDreamScreenState extends State<AddDreamScreen> {
-  final _formKey = GlobalKey<FormState>();
-  String _title = '';
-  String _description = '';
-  DateTime _date = DateTime.now();
-  TimeOfDay _time = TimeOfDay.now();
-  int _lucidity = 1;
-  int _clarity = 3;
-  String _duration = 'Court';
-  int _sleepQuality = 3;
-  String _mood = 'Joyeux';
-  bool _isNightmare = false;
-  bool _isRecurring = false;
-  List<String> _tags = [];
-  List<String> predefinedTags = [
-    "Vol", "Eau", "Famille", "Animaux", "Ville", "Nature", "Poursuite", "École"
-  ];
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _date,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null && picked != _date)
-      setState(() {
-        _date = picked;
-      });
-  }
-
-  Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: _time,
-    );
-    if (picked != null && picked != _time)
-      setState(() {
-        _time = picked;
-      });
-  }
-
-  void _addTag(String tag) {
-    if (tag.isNotEmpty && !_tags.contains(tag)) {
-      setState(() {
-        _tags.add(tag);
-      });
-    }
-  }
-
-  void _removeTag(String tag) {
-    setState(() {
-      _tags.remove(tag);
-    });
-  }
+class AddDreamScreen extends ConsumerWidget {
+  const AddDreamScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final firstDate = DateTime(DateTime.now().year - 120);
-    final lastDate = DateTime.now();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final dreamForm = ref.watch(dreamFormProvider);
+    final dreamViewModel = DreamViewModel();
 
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          children: [
-            Icon(Icons.bedtime, color: Colors.purple),
-            SizedBox(width: 8),
-            Text('Nouveau Rêve'),
-          ],
+        backgroundColor: Colors.deepPurple,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.of(context).pop(),
         ),
+        title: const Text(
+          'Nouveau rêve',
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+        centerTitle: false,
         actions: [
-          TextButton(
-            onPressed: () {
-              // Sauvegarder en brouillon
-            },
-            child: Text('Brouillon', style: TextStyle(color: Colors.white)),
-          ),
-          IconButton(
-            icon: Icon(Icons.delete, color: Colors.white),
-            onPressed: () {
-              _formKey.currentState?.reset();
-            },
-          ),
+          Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+              OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  foregroundColor: Colors.white,
+                  side: const BorderSide(color: Colors.white),
+                ),
+                onPressed: () {
+                  print('OutlinedButton pressed');
+                },
+                child: Text('Brouillon'),
+              ),
+              ButtonTheme(
+                  minWidth: 0,
+                  padding: const EdgeInsets.all(8),
+                  child: TextButton(
+                      onPressed: Navigator.of(context).pop,
+                      child: const Text(
+                        'Effacer',
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      )
+                  )
+              ),
+          ]
+          )
         ],
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Card(
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.bedtime, color: Colors.purple),
-                          SizedBox(width: 8),
-                          Text('Détails du rêve', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                      TextFormField(
-                        decoration: InputDecoration(labelText: 'Titre du rêve *'),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Veuillez entrer un titre';
-                          }
-                          return null;
-                        },
-                        onSaved: (value) {
-                          _title = value!;
-                        },
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Date'),
-                                InputDatePickerFormField(firstDate: firstDate, lastDate: lastDate,)
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Heure du réveil'),
-                                TextButton(
-                                  onPressed: () => _selectTime(context),
-                                  child: Text(_time.format(context)),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      TextFormField(
-                        decoration: InputDecoration(labelText: 'Description du rêve *'),
-                        maxLines: 4,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Veuillez entrer une description';
-                          }
-                          return null;
-                        },
-                        onSaved: (value) {
-                          _description = value!;
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Card(
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.star, color: Colors.orange),
-                          SizedBox(width: 8),
-                          Text('Caractéristiques', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Niveau de lucidité'),
-                          Slider(
-                            value: _lucidity.toDouble(),
-                            min: 1,
-                            max: 5,
-                            divisions: 4,
-                            label: _lucidity.toString(),
-                            onChanged: (value) {
-                              setState(() {
-                                _lucidity = value.toInt();
-                              });
-                            },
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Pas conscient'),
-                              Text('Totalement lucide'),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Clarté du souvenir'),
-                          Slider(
-                            value: _clarity.toDouble(),
-                            min: 1,
-                            max: 5,
-                            divisions: 4,
-                            label: _clarity.toString(),
-                            onChanged: (value) {
-                              setState(() {
-                                _clarity = value.toInt();
-                              });
-                            },
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Très flou'),
-                              Text('Très clair'),
-                            ],
-                          ),
-                        ],
-                      ),
-                      DropdownButtonFormField<String>(
-                        value: _duration,
-                        decoration: InputDecoration(labelText: 'Durée perçue'),
-                        items: ['Court', 'Moyen', 'Long', 'Très long'].map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (newValue) {
-                          setState(() {
-                            _duration = newValue!;
-                          });
-                        },
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Qualité du sommeil'),
-                          Slider(
-                            value: _sleepQuality.toDouble(),
-                            min: 1,
-                            max: 5,
-                            divisions: 4,
-                            label: _sleepQuality.toString(),
-                            onChanged: (value) {
-                              setState(() {
-                                _sleepQuality = value.toInt();
-                              });
-                            },
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Très mauvais'),
-                              Text('Excellent'),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Card(
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.favorite, color: Colors.pink),
-                          SizedBox(width: 8),
-                          Text('Émotions et type', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                      Text('Humeur générale'),
-                      Wrap(
-                        spacing: 8.0,
-                        children: [
-                          'Joyeux', 'Paisible', 'Mystérieux', 'Nostalgique', 'Anxieux', 'Excité'
-                        ].map((mood) {
-                          return ChoiceChip(
-                            label: Text(mood),
-                            selected: _mood == mood,
-                            onSelected: (selected) {
-                              setState(() {
-                                _mood = mood;
-                              });
-                            },
-                          );
-                        }).toList(),
-                      ),
-                      SwitchListTile(
-                        title: Text('Cauchemar'),
-                        subtitle: Text('Ce rêve était-il effrayant ?'),
-                        value: _isNightmare,
-                        onChanged: (value) {
-                          setState(() {
-                            _isNightmare = value;
-                          });
-                        },
-                      ),
-                      SwitchListTile(
-                        title: Text('Rêve récurrent'),
-                        subtitle: Text('Avez-vous déjà fait ce rêve ?'),
-                        value: _isRecurring,
-                        onChanged: (value) {
-                          setState(() {
-                            _isRecurring = value;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Card(
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.label, color: Colors.green),
-                          SizedBox(width: 8),
-                          Text('Thèmes et éléments', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                      Wrap(
-                        spacing: 8.0,
-                        children: _tags.map((tag) {
-                          return Chip(
-                            label: Text(tag),
-                            onDeleted: () => _removeTag(tag),
-                          );
-                        }).toList(),
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              decoration: InputDecoration(labelText: 'Ajouter un thème...'),
-                              onSubmitted: _addTag,
-                            ),
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.add),
-                            onPressed: () {
-                              // Ajouter un thème
-                            },
-                          ),
-                        ],
-                      ),
-                      Text('Thèmes populaires'),
-                      Wrap(
-                        spacing: 8.0,
-                        children: predefinedTags.map((tag) {
-                          return FilterChip(
-                            label: Text(tag),
-                            onSelected: (selected) {
-                              _addTag(tag);
-                            },
-                          );
-                        }).toList(),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Card(
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.camera_alt, color: Colors.blue),
-                          SizedBox(width: 8),
-                          Text('Médias (optionnel)', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Column(
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.camera_alt),
-                                onPressed: () {
-                                  // Ajouter une photo
-                                },
-                              ),
-                              Text('Photo'),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.color_lens),
-                                onPressed: () {
-                                  // Ajouter un dessin
-                                },
-                              ),
-                              Text('Dessin'),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.mic),
-                                onPressed: () {
-                                  // Ajouter un audio
-                                },
-                              ),
-                              Text('Audio'),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Text(
-                        'Ajoutez des images, dessins ou enregistrements pour enrichir votre rêve',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Row(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Expanded(
-              child: ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-                    // Sauvegarder en brouillon
-                  }
-                },
-                child: Text('Sauvegarder en brouillon'),
-              ),
-            ),
-            SizedBox(width: 16.0),
-            Expanded(
-              child: ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-                    // Enregistrer
-                  }
-                },
-                child: Text('Enregistrer'),
-              ),
-            ),
+            const ThemeSwitcher(),
+            const DreamDetailsCard(),
+            const SizedBox(height: 16),
+            const DreamCharacteristicsCard(),
+            const SizedBox(height: 16),
+            const DreamEmotionsCard(),
+            const SizedBox(height: 24),
+            const DreamThemesCard(),
+            const SizedBox(height: 24),
+            const MediaUploadCard(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                OutlinedButton(
+                  onPressed: () {
+                    debugPrint('Sauvegarde en brouillon');
+                  },
+                  child: const Text('Sauvegarder en brouillon'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    ref.read(dreamFormProvider.notifier).logDream();
+                    dreamViewModel.addDream(dreamForm);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepPurple,
+                  ),
+                  child: const Text('Enregistrer'),
+                ),
+              ],
+            )
           ],
         ),
       ),

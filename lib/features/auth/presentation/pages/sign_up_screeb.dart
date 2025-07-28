@@ -11,7 +11,7 @@ class SignUpScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-
+              Text("salut ! Page d'inscription.")
           ],
         ),
       ),
