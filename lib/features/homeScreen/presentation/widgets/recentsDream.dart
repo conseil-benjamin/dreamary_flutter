@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,6 +13,7 @@ class RecentDreams extends ConsumerWidget{
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dreamViewModel = DreamViewModel();
+    final user = FirebaseAuth.instance.currentUser;
 
     return Card(
       margin: const EdgeInsets.all(16.0),
@@ -32,7 +34,7 @@ class RecentDreams extends ConsumerWidget{
           ),
           const SizedBox(height: 8.0),
           FutureBuilder<List<Dream>>(
-            future: dreamViewModel.getRecentDreams(),
+            future: dreamViewModel.getRecentDreams(user?.uid ?? ''),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());

@@ -21,8 +21,6 @@ class Userviewmodel {
       bool userExists = await firebaseServiceUser.checkIfEmailIsAlreadyUsed(user.user?.email ?? '');
       if (!userExists) {
         // Si l'utilisateur n'existe pas, l'ajouter
-        // faudrait également stocker en bdd l'user car en soit il est déjà login avec google
-        // todo : ajouter l'utilisateur dans la base de données
 
         final prefs = await SharedPreferences.getInstance();
         await prefs.setBool("hasMoreInformationToComplete", true);
@@ -34,6 +32,14 @@ class Userviewmodel {
     }
   }
 
-
-
+  Future<bool> addUser(String userId, String email, String name, String photoUrl, String bio, String username) async {
+      await firebaseServiceUser.addUser(userId, email, name, photoUrl, bio, username).then(
+        (value) async {
+        },
+      ).catchError((error) {
+        throw Exception("Erreur lors de l'ajout de l'utilisateur : $error");
+        return false;
+      });
+      return true;
+  }
 }

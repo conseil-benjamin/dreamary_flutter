@@ -1,3 +1,5 @@
+import 'package:dreamary_flutter/viewModels/userViewModel.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,11 +12,8 @@ class MoreInformations extends ConsumerWidget{
   Widget build(BuildContext context, WidgetRef ref) {
     var username = "";
     var bio = "";
-    final prefs = SharedPreferences.getInstance();
-    prefs.then((sharedPreferences) {
-      sharedPreferences.get("userInformations");
-    });
-
+    final user = FirebaseAuth.instance.currentUser;
+    Userviewmodel usermodel = Userviewmodel();
 
     return Scaffold(
       appBar: AppBar(
@@ -52,7 +51,28 @@ class MoreInformations extends ConsumerWidget{
                 hintText: 'Entrez votre bio',
                 prefixIcon: const Icon(Icons.info_outline),
               ),
-            )
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                if (user != null && username.isNotEmpty && bio.isNotEmpty) {
+                  await usermodel.addUser(
+                    user.uid,
+                    user.email ?? '',
+                    user.displayName ?? '',
+                    user.photoURL ?? '',
+                    bio,
+                    username,
+                  ).then((value) async {
+                    Navigator.of(context).pushNamedAndRemoveUntil("/onBoarding", (Route<dynamic> route) => false);
+                  });
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Veuillez remplir tous les champs')),
+                  );
+                }
+              },
+              child: Text("Terminer l'inscription"),
+            ),
           ],
         )
       ),

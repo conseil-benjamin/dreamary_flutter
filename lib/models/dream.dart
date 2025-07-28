@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class Dream {
+  late final String? userId;
   final String? id;
   final String title;
   final DateTime? date;
@@ -20,6 +21,7 @@ class Dream {
   final List<String> audioPaths;
 
   Dream({
+    this.userId,
     this.id,
     this.title = '',
     this.date,

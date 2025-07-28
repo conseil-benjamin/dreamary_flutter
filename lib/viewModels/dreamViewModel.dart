@@ -28,7 +28,7 @@ class DreamViewModel {
     await firebaseService.deleteDream(dreamId);
   }
 
-  Future<List<Dream>> getRecentDreams() async {
-    return await firebaseService.getRecentDreams();
+  Future<List<Dream>> getRecentDreams(String userId) async {
+    return await firebaseService.getRecentDreams(userId);
   }
 }

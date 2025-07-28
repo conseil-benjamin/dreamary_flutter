@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dreamary_flutter/features/newDream/presentation/widgets/dream_themes_card.dart';
 import 'package:dreamary_flutter/styles/themeSwitcher.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../models/dream.dart';
@@ -18,6 +19,7 @@ class AddDreamScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final dreamForm = ref.watch(dreamFormProvider);
     final dreamViewModel = DreamViewModel();
+    final user = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
       appBar: AppBar(
@@ -99,6 +101,7 @@ class AddDreamScreen extends ConsumerWidget {
                         );
                         return;
                       }
+                      dreamForm.userId = user?.uid ?? 'unknown_user';
                       await dreamViewModel.addDream(dreamForm);
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(

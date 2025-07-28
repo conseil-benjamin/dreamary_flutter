@@ -5,9 +5,10 @@ import '../models/dream.dart';
 class Dreamservice {
   final CollectionReference dreamsCollection =
       FirebaseFirestore.instance.collection('dreams');
+  final CollectionReference usersCollection = FirebaseFirestore.instance.collection('users');
 
   Future<void> addDream(Dream dream) async {
-    await dreamsCollection.doc(dream.id).set(dream.toMap());
+    await usersCollection.doc(dream.userId).collection('dreams').doc(dream.id).set(dream.toMap());
   }
 
   Future<void> updateDream(Dream dream) async {
@@ -34,7 +35,8 @@ class Dreamservice {
     }).toList();
   }
 
-  Future<List<Dream>> getRecentDreams() async {
+  Future<List<Dream>> getRecentDreams(String userId) async {
+    // todo : ajouter un filtre pour l'utilisateur
     final querySnapshot = await dreamsCollection
         .orderBy('date', descending: true)
         .limit(2)
