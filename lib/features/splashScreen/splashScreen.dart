@@ -1,9 +1,7 @@
 import 'package:dreamary_flutter/features/homeScreen/presentation/page/homeScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'package:dreamary_flutter/features/auth/presentation/pages/login_screen.dart';
-import '../newDream/presentation/pages/add_new_dream.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});

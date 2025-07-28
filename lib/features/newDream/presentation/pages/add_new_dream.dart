@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dreamary_flutter/features/newDream/presentation/widgets/dream_themes_card.dart';
 import 'package:dreamary_flutter/styles/themeSwitcher.dart';
 import 'package:flutter/material.dart';
@@ -86,15 +88,38 @@ class AddDreamScreen extends ConsumerWidget {
                   child: const Text('Sauvegarder en brouillon'),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    ref.read(dreamFormProvider.notifier).logDream();
-                    dreamViewModel.addDream(dreamForm);
+                  onPressed: () async {
+                    try {
+                      if (dreamForm.title.isEmpty || dreamForm.description.isEmpty || dreamForm.date == null || dreamForm.wakeUpTime == null || dreamForm.moods.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Veuillez remplir tous les champs obligatoires.'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                        return;
+                      }
+                      await dreamViewModel.addDream(dreamForm);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Rêve ajouté avec succès!'),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+                      Timer(const Duration(seconds: 2), () {
+                        Navigator.of(context).pop();
+                      });
+                    } catch (error) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Erreur lors de l\'ajout du rêve : $error'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurple,
-                  ),
-                  child: const Text('Enregistrer'),
-                ),
+                  child: Text('Ajouter un rêve'),
+                )
               ],
             )
           ],

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/dream.dart';
 
-class FirebaseService {
+class Dreamservice {
   final CollectionReference dreamsCollection =
       FirebaseFirestore.instance.collection('dreams');
 
@@ -24,6 +24,14 @@ class FirebaseService {
       return Dream.fromMap(docSnapshot.data() as Map<String, dynamic>, docSnapshot.id);
     }
     return null;
+  }
+
+  Future<List<Dream>> getDreams() async {
+    final querySnapshot = await dreamsCollection.get();
+    return querySnapshot.docs.map((doc) {
+      // Convertit chaque document en un objet Dream
+      return Dream.fromMap(doc.data() as Map<String, dynamic>, doc.id);
+    }).toList();
   }
 
   Future<List<Dream>> getRecentDreams() async {

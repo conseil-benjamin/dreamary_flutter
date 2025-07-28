@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class User {
+class UserModel {
   final String id;
   final String uid;
   final String email;
@@ -16,7 +16,7 @@ class User {
   final Map<String, dynamic> progression;
   final Map<String, dynamic> social;
 
-  User({
+  UserModel({
     this.id = '',
     this.uid = '',
     this.email = '',
@@ -63,7 +63,7 @@ class User {
           'following': 0,
         };
 
-  User copyWith({
+  UserModel copyWith({
     String? id,
     String? uid,
     String? email,
@@ -78,7 +78,7 @@ class User {
     Map<String, dynamic>? progression,
     Map<String, dynamic>? social,
   }) {
-    return User(
+    return UserModel(
       id: id ?? this.id,
       uid: uid ?? this.uid,
       email: email ?? this.email,
@@ -114,8 +114,8 @@ class User {
   }
 }
 
-class UserFormNotifier extends StateNotifier<User> {
-  UserFormNotifier() : super(User());
+class UserFormNotifier extends StateNotifier<UserModel> {
+  UserFormNotifier() : super(UserModel());
 
   void setEmail(String email) {
     state = state.copyWith(email: email);
@@ -172,7 +172,7 @@ class UserFormNotifier extends StateNotifier<User> {
   }
 
   void reset() {
-    state = User();
+    state = UserModel();
   }
 
   void logUser() {
@@ -194,6 +194,6 @@ class UserFormNotifier extends StateNotifier<User> {
 }
 
 // Provider à utiliser dans les widgets Flutter avec Riverpod
-final userFormProvider = StateNotifierProvider<UserFormNotifier, User>(
+final userFormProvider = StateNotifierProvider<UserFormNotifier, UserModel>(
       (ref) => UserFormNotifier(),
 );

@@ -2,14 +2,22 @@ import '../../../models/dream.dart';
 import '../../../services/dreamService.dart';
 
 class DreamViewModel {
-  final FirebaseService firebaseService = FirebaseService();
+  final Dreamservice firebaseService = Dreamservice();
 
   Future<void> addDream(Dream dream) async {
-    await firebaseService.addDream(dream);
+    try {
+      await firebaseService.addDream(dream);
+    } catch (error) {
+      throw Exception("Erreur lors de l'ajout du rêve : $error");
+    }
   }
 
   Future<Dream?> getDream(String dreamId) async {
     return await firebaseService.getDream(dreamId);
+  }
+
+  Future<List<Dream>> getDreams() async {
+    return await firebaseService.getDreams();
   }
 
   Future<void> updateDream(Dream dream) async {
