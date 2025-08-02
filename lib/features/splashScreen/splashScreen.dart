@@ -1,3 +1,4 @@
+import 'package:dreamary_flutter/features/auth/moreInformationAfterRegister/page/moreInformations.dart';
 import 'package:dreamary_flutter/features/homeScreen/presentation/page/homeScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ class SplashScreen extends StatelessWidget {
 
         final isLoggedIn = snapshot.data == true;
 
-        return isLoggedIn ? const Homescreen() : const LoginScreen();
+        return isLoggedIn ? const MoreInformations() : const LoginScreen();
       },
     );
   }

@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:dreamary_flutter/viewModels/userViewModel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MoreInformations extends ConsumerWidget{
@@ -10,10 +13,12 @@ class MoreInformations extends ConsumerWidget{
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    
     var username = "";
     var bio = "";
     final user = FirebaseAuth.instance.currentUser;
     Userviewmodel usermodel = Userviewmodel();
+    File ? imageFile;
 
     return Scaffold(
       appBar: AppBar(
@@ -73,9 +78,45 @@ class MoreInformations extends ConsumerWidget{
               },
               child: Text("Terminer l'inscription"),
             ),
+            MyImagePickerWidget(),
           ],
         )
       ),
+    );
+  }
+}
+
+class MyImagePickerWidget extends StatefulWidget {
+  @override
+  _MyImagePickerWidgetState createState() => _MyImagePickerWidgetState();
+}
+
+class _MyImagePickerWidgetState extends State<MyImagePickerWidget> {
+  File? image;
+
+  Future<void> _pickImageFromGallery() async {
+    final returnImage = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 50,
+    );
+
+    if (returnImage != null) {
+      setState(() {
+        image = File(returnImage.path);
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ElevatedButton(
+          onPressed: _pickImageFromGallery,
+          child: Text("Choisir une image"),
+        ),
+        if (image != null) Image.file(image!),
+      ],
     );
   }
 }
