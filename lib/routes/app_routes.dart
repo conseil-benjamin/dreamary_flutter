@@ -3,6 +3,7 @@ import 'package:dreamary_flutter/features/auth/presentation/pages/login_screen.d
 import 'package:dreamary_flutter/features/auth/presentation/pages/sign_up_screeb.dart';
 import 'package:dreamary_flutter/features/homeScreen/presentation/page/homeScreen.dart';
 import 'package:dreamary_flutter/features/journal/presentation/page/journal.dart';
+import 'package:dreamary_flutter/features/profile/presentation/pages/profile.dart';
 import 'package:dreamary_flutter/features/settings/page/settings.dart';
 import 'package:flutter/material.dart';
 import '../features/onBoarding/presentation/page/onBoarding.dart';
@@ -28,6 +29,8 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const Settings());
       case RouteNames.journal:
         return MaterialPageRoute(builder: (_) => const Journal());
+      case RouteNames.profile:
+        return MaterialPageRoute(builder: (_) => const Profile());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

@@ -20,6 +20,7 @@ class AddDreamScreen extends ConsumerWidget {
     final dreamForm = ref.watch(dreamFormProvider);
     final dreamViewModel = DreamViewModel();
     final user = FirebaseAuth.instance.currentUser;
+    final theme = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: AppBar(
@@ -70,7 +71,6 @@ class AddDreamScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const ThemeSwitcher(),
             const DreamDetailsCard(),
             const SizedBox(height: 16),
             const DreamCharacteristicsCard(),
@@ -101,8 +101,9 @@ class AddDreamScreen extends ConsumerWidget {
                         );
                         return;
                       }
-                      dreamForm.userId = user?.uid ?? 'unknown_user';
-                      await dreamViewModel.addDream(dreamForm);
+                      ref.read(dreamFormProvider.notifier).setUserId(user!.uid);
+                      final updatedDream = ref.read(dreamFormProvider); // Maintenant c’est à jour
+                      await dreamViewModel.addDream(updatedDream);
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text('Rêve ajouté avec succès!'),

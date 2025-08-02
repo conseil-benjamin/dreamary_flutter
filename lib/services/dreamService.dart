@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../models/dream.dart';
 
@@ -8,6 +9,7 @@ class Dreamservice {
   final CollectionReference usersCollection = FirebaseFirestore.instance.collection('users');
 
   Future<void> addDream(Dream dream) async {
+    debugPrint(dream.userId);
     await usersCollection.doc(dream.userId).collection('dreams').doc(dream.id).set(dream.toMap());
   }
 
@@ -27,8 +29,8 @@ class Dreamservice {
     return null;
   }
 
-  Future<List<Dream>> getDreams() async {
-    final querySnapshot = await dreamsCollection.get();
+  Future<List<Dream>> getDreams(String userId) async {
+    final querySnapshot = await usersCollection.doc(userId).collection('dreams').get();
     return querySnapshot.docs.map((doc) {
       // Convertit chaque document en un objet Dream
       return Dream.fromMap(doc.data() as Map<String, dynamic>, doc.id);
@@ -36,8 +38,9 @@ class Dreamservice {
   }
 
   Future<List<Dream>> getRecentDreams(String userId) async {
-    // todo : ajouter un filtre pour l'utilisateur
-    final querySnapshot = await dreamsCollection
+    final querySnapshot = await usersCollection
+        .doc(userId)
+        .collection('dreams')
         .orderBy('date', descending: true)
         .limit(2)
         .get();

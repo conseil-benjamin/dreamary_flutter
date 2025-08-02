@@ -7,10 +7,12 @@ class BottomAppBarWidget extends ConsumerWidget{
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context).colorScheme;
+
     return BottomAppBar(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       height: 50,
-      color: Colors.deepPurple,
+      color: Theme.of(context).colorScheme.surfaceContainer,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
@@ -19,14 +21,14 @@ class BottomAppBarWidget extends ConsumerWidget{
             children: [
               IconButton(
                 padding: const EdgeInsets.all(0),
-                icon: const Icon(Icons.home, color: Colors.white),
+                icon: Icon(Icons.home, color: theme.onSurface),
                 onPressed: () {
                   Navigator.of(context).pushReplacementNamed('/home');
                 },
               ),
               Text(
                 'Accueil',
-                style: TextStyle(color: Colors.white, fontSize: 12),
+                style: TextStyle(color: theme.onSurface, fontSize: 12),
               ),
             ],
           ),
@@ -34,14 +36,14 @@ class BottomAppBarWidget extends ConsumerWidget{
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               IconButton(
-                icon: const Icon(Icons.menu_book, color: Colors.white),
+                icon: Icon(Icons.menu_book, color: theme.onSurface),
                 onPressed: () {
                   Navigator.of(context).pushReplacementNamed('/journal');
                 },
               ),
               Text(
                 'Journal',
-                style: TextStyle(color: Colors.white, fontSize: 12),
+                style: TextStyle(color: theme.onSurface, fontSize: 12),
               ),
             ],
           ),
@@ -49,14 +51,14 @@ class BottomAppBarWidget extends ConsumerWidget{
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               IconButton(
-                icon: const Icon(Icons.query_stats_sharp, color: Colors.white),
+                icon: Icon(Icons.query_stats_sharp, color: theme.onSurface),
                 onPressed: () {
                   Navigator.of(context).pushReplacementNamed('/stats');
                 },
               ),
               Text(
                 'Stats',
-                style: TextStyle(color: Colors.white, fontSize: 12),
+                style: TextStyle(color: theme.onSurface, fontSize: 12),
               ),
             ],
           ),
@@ -64,14 +66,14 @@ class BottomAppBarWidget extends ConsumerWidget{
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               IconButton(
-                icon: const Icon(Icons.chat_outlined, color: Colors.white),
+                icon: Icon(Icons.chat_outlined, color: theme.onSurface),
                 onPressed: () {
                   Navigator.of(context).pushReplacementNamed('/social');
                 },
               ),
               Text(
                 'Social',
-                style: TextStyle(color: Colors.white, fontSize: 12),
+                style: TextStyle(color: theme.onSurface, fontSize: 12),
               ),
             ],
           ),
@@ -79,14 +81,14 @@ class BottomAppBarWidget extends ConsumerWidget{
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               IconButton(
-                icon: const Icon(Icons.person, color: Colors.white),
+                icon: Icon(Icons.person, color: theme.onSurface),
                 onPressed: () {
                   Navigator.of(context).pushReplacementNamed('/profile');
                 },
               ),
               Text(
                 'Profil',
-                style: TextStyle(color: Colors.white, fontSize: 12),
+                style: TextStyle(color: theme.onSurface, fontSize: 12),
               ),
             ],
           ),

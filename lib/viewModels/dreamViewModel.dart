@@ -16,8 +16,8 @@ class DreamViewModel {
     return await firebaseService.getDream(dreamId);
   }
 
-  Future<List<Dream>> getDreams() async {
-    return await firebaseService.getDreams();
+  Future<List<Dream>> getDreams(String userId) async {
+    return await firebaseService.getDreams(userId);
   }
 
   Future<void> updateDream(Dream dream) async {

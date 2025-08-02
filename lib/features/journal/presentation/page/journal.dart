@@ -1,5 +1,6 @@
 import 'package:dreamary_flutter/features/journal/presentation/widgets/listDreams.dart';
 import 'package:dreamary_flutter/widgetsGlobal/BottomAppBar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,6 +10,7 @@ class Journal extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final user = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
       appBar: AppBar(

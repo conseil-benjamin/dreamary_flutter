@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class Dream {
-  late final String? userId;
+  late String? userId;
   final String? id;
   final String title;
   final DateTime? date;
@@ -45,6 +45,7 @@ class Dream {
         audioPaths = audioPaths ?? [];
 
   Dream copyWith({
+    String? userId,
     String? title,
     DateTime? date,
     TimeOfDay? wakeUpTime,
@@ -62,6 +63,7 @@ class Dream {
     List<String>? audioPaths,
   }) {
     return Dream(
+      userId: userId ?? this.userId,
       title: title ?? this.title,
       date: date ?? this.date,
       wakeUpTime: wakeUpTime ?? this.wakeUpTime,
@@ -81,6 +83,7 @@ class Dream {
   }
   Map<String, dynamic> toMap() {
     return {
+      'userId': userId,
       'id': id,
       'title': title,
       'date': date?.toIso8601String(),
@@ -102,6 +105,7 @@ class Dream {
 
   factory Dream.fromMap(Map<String, dynamic> map, String id) {
     return Dream(
+      userId: map['userId'],
       id: id,
       title: map['title'] ?? '',
       date: map['date'] != null ? DateTime.parse(map['date']) : null,
@@ -130,6 +134,10 @@ class Dream {
 
 class DreamFormNotifier extends StateNotifier<Dream> {
   DreamFormNotifier() : super(Dream());
+
+  void setUserId(String userId) {
+    state = state.copyWith(userId: userId);
+  }
 
   void setTitle(String title) {
     state = state.copyWith(title: title);
@@ -212,6 +220,7 @@ class DreamFormNotifier extends StateNotifier<Dream> {
 
   void logDream() {
     debugPrint('Données du rêve :');
+    debugPrint('UserId: ${state.userId}');
     debugPrint('Title: ${state.title}');
     debugPrint('Date: ${state.date}');
     debugPrint('WakeUpTime: ${state.wakeUpTime}');

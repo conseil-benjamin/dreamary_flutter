@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../providers/firebase_provider.dart';
 import '../../../../viewModels/dreamViewModel.dart';
 
 class ListDreams extends ConsumerWidget{
@@ -13,11 +14,13 @@ class ListDreams extends ConsumerWidget{
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dreamViewModel = DreamViewModel();
+    final user = ref.watch(currentUserProvider);
 
     return Container(
-      color: Colors.white, // Couleur de fond
+      color: Theme.of(context).colorScheme.surface,
+      height: MediaQuery.of(context).size.height * 0.8,
       child: FutureBuilder<List<Dream>>(
-        future: dreamViewModel.getDreams(),
+        future: dreamViewModel.getDreams(user?.uid ?? ''),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -29,9 +32,42 @@ class ListDreams extends ConsumerWidget{
               itemCount: dreams.length,
               itemBuilder: (context, index) {
                 final dream = dreams[index];
-                return ListTile(
-                  title: Text(dream.title),
-                  subtitle: Text(dream.description),
+                return Card(
+                  margin: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                              dream.title ?? 'Sans titre',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            dream.date != null
+                                ? 'Date: ${dream.date!.toLocal().toIso8601String().substring(0, 10)}'
+                                : 'Date inconnue',
+                          ),
+                        ],
+                      ),
+                      Text(
+                          dream.description ?? 'Sans titre',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.start,
+                      ),
+                      if (dream.moods.isNotEmpty)
+                        Wrap(
+                          spacing: 2.0,
+                          children: dream.moods.map((emotion) => Chip(label: Text(emotion))).toList(),
+                        ),
+                    ]
+                  ),
                 );
               },
             );
