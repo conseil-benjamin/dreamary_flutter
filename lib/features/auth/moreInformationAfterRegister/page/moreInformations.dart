@@ -24,10 +24,17 @@ class _MoreInformationsState extends ConsumerState<MoreInformations> {
   final user = FirebaseAuth.instance.currentUser;
   Userviewmodel usermodel = Userviewmodel();
   File? imageFile; // 🔸 image choisie
+  String imageUrl = "";
 
   void setImage(File file) {
     setState(() {
       imageFile = file;
+    });
+  }
+
+  void setImageUrl(String url) {
+    setState(() {
+      imageUrl = url;
     });
   }
 
@@ -61,17 +68,17 @@ class _MoreInformationsState extends ConsumerState<MoreInformations> {
               ),
             ),
             // 🔻 Ici on passe une callback à l’enfant pour qu’il nous envoie l’image
-            MyImagePickerWidget(onImageSelected: setImage),
+            MyImagePickerWidget(onImageSelected: setImage, onImageUrlObtnained: setImageUrl),
             ElevatedButton(
               onPressed: () async {
-                if (user != null && username.isNotEmpty && bio.isNotEmpty && imageFile != null) {
+                if (user != null && username.isNotEmpty && bio.isNotEmpty && imageUrl != "") {
                   // imageFile est bien définie ici ✅
                   // todo : faire un check pour regarder si le pseudo existe déjà ou non
                   await usermodel.addUser(
                     user!.uid,
                     user?.email ?? '',
                     user?.displayName ?? '',
-                    imageFile!.path, // exemple
+                    imageUrl,
                     bio,
                     username,
                   ).then((value) {
@@ -109,8 +116,9 @@ class _MoreInformationsState extends ConsumerState<MoreInformations> {
 
 class MyImagePickerWidget extends StatefulWidget {
   final void Function(File) onImageSelected;
+  final void Function(String) onImageUrlObtnained;
 
-  const MyImagePickerWidget({super.key, required this.onImageSelected});
+  const MyImagePickerWidget({super.key, required this.onImageSelected, required this.onImageUrlObtnained});
 
   @override
   _MyImagePickerWidgetState createState() => _MyImagePickerWidgetState();
@@ -118,6 +126,8 @@ class MyImagePickerWidget extends StatefulWidget {
 
 class _MyImagePickerWidgetState extends State<MyImagePickerWidget> {
   File? image;
+  String imageUrl = "";
+  late UploadTask uploadTask;
 
   Future<void> _pickImageFromGallery() async {
     final returnImage = await ImagePicker().pickImage(
@@ -137,8 +147,11 @@ class _MyImagePickerWidgetState extends State<MyImagePickerWidget> {
 
   Future<void> uploadFile() async {
     final ref = FirebaseStorage.instance.ref().child("profilePictures/${FirebaseAuth.instance.currentUser!.uid}/profile_image.jpg");
-    print("Uploading image to: ${image!.path}");
-    ref.putFile(image!);
+    uploadTask = ref.putFile(image!);
+
+    final snapshot = await uploadTask.whenComplete(() {});
+    imageUrl = await snapshot.ref.getDownloadURL();
+    widget.onImageUrlObtnained(imageUrl);
   }
 
   @override
