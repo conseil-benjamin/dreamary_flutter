@@ -3,11 +3,13 @@ import 'dart:io';
 import 'package:animate_do/animate_do.dart';
 import 'package:dreamary_flutter/viewModels/userViewModel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:dreamary_flutter/models/StateApp.dart';
 
 class MoreInformations extends ConsumerStatefulWidget {
   const MoreInformations({super.key});
@@ -64,6 +66,7 @@ class _MoreInformationsState extends ConsumerState<MoreInformations> {
               onPressed: () async {
                 if (user != null && username.isNotEmpty && bio.isNotEmpty && imageFile != null) {
                   // imageFile est bien définie ici ✅
+                  // todo : faire un check pour regarder si le pseudo existe déjà ou non
                   await usermodel.addUser(
                     user!.uid,
                     user?.email ?? '',
@@ -72,7 +75,21 @@ class _MoreInformationsState extends ConsumerState<MoreInformations> {
                     bio,
                     username,
                   ).then((value) {
-                    Navigator.of(context).pushNamedAndRemoveUntil("/onBoarding", (_) => false);
+                    if (value == StateApp.usernameAlreadyTaken) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Ce nom d\'utilisateur est déjà utilisé')),
+                      );
+                      return;
+                    } else if (value == StateApp.successfullyAddedUser) {
+                      Navigator.of(context).pushNamedAndRemoveUntil("/onBoarding", (_) => false);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Inscription terminée avec succès')),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Une erreur est survenue, veuillez réessayer')),
+                      );
+                    }
                   });
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -114,7 +131,14 @@ class _MyImagePickerWidgetState extends State<MyImagePickerWidget> {
         image = selectedFile;
       });
       widget.onImageSelected(selectedFile); // ⬅️ On renvoie l’image au parent ici
+      await uploadFile();
     }
+  }
+
+  Future<void> uploadFile() async {
+    final ref = FirebaseStorage.instance.ref().child("profilePictures/${FirebaseAuth.instance.currentUser!.uid}/profile_image.jpg");
+    print("Uploading image to: ${image!.path}");
+    ref.putFile(image!);
   }
 
   @override
