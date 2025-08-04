@@ -20,7 +20,7 @@ class SplashScreen extends StatelessWidget {
 
         final isLoggedIn = snapshot.data == true;
 
-        return isLoggedIn ? const MoreInformations() : const LoginScreen();
+        return isLoggedIn ? const Homescreen() : const LoginScreen();
       },
     );
   }

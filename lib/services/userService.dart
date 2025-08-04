@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dreamary_flutter/models/StateApp.dart';
 import 'package:dreamary_flutter/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -35,56 +36,73 @@ class Userservice {
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
-  Future<bool> addUser(String userId, String email, String name, String photoUrl, String bio, String username) async {
-
-    UserModel user = UserModel(
-      uid: userId,
-      email: email,
-      username: username,
-      profilePictureUrl: photoUrl,
-      bio: bio,
-      fullName: name,
-      metadata: {
-        "accountStatus": "active",
-        "isPremium": false,
-        "lastDreamDate": FieldValue.serverTimestamp(),
-        'createdAt': FieldValue.serverTimestamp(),
-        'lastLogin': FieldValue.serverTimestamp(),
-      },
-      preferences: {
-        "notifications": true,
-        "theme": "dark",
-        "isPrivateProfile": false,
-        "language": "fr"
-      },
-      dreamStats: {
-        "nightmares": 0,
-        "totalDreams": 0,
-        "lucidDreams": 0,
-        "longestStreak": 0,
-        "currentStreak": 0
-      },
-      progression: {
-        "xpNeeded": 1000,
-        "level": 1,
-        "xp": 0,
-        "rank": "Débutant"
-      },
-      social: {
-        "groups": <String>[],
-        "followers": 0,
-        "following": 0
-      },
-    );
-    await usersCollection.doc(userId).set(user.toMap()).then(
-      (value) async {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setBool("hasMoreInformationToComplete", false);
-      },
-    ).catchError((error) {
-      print("Error adding user: $error");
+  Future<bool> isAlreadyUsernameUsed(String username) async {
+    final QuerySnapshot result = await usersCollection.where("username", isEqualTo: username).get();
+    final List<DocumentSnapshot> documents = result.docs;
+    if (documents.isNotEmpty) {
+      return true;
+    } else {
       return false;
-    });
-    return true;
+    }
+  }
+
+  Future<StateApp> addUser(String userId, String email, String name, String photoUrl, String bio, String username) async {
+    // Check if the username is already used
+    bool isUsernameUsed = await isAlreadyUsernameUsed(username);
+    if (isUsernameUsed) {
+      print("Username already used");
+      return StateApp.usernameAlreadyTaken;
+    } else {
+      print('Username is available, proceeding to add user');
+      UserModel user = UserModel(
+        uid: userId,
+        email: email,
+        username: username,
+        profilePictureUrl: photoUrl,
+        bio: bio,
+        fullName: name,
+        metadata: {
+          "accountStatus": "active",
+          "isPremium": false,
+          "lastDreamDate": FieldValue.serverTimestamp(),
+          'createdAt': FieldValue.serverTimestamp(),
+          'lastLogin': FieldValue.serverTimestamp(),
+        },
+        preferences: {
+          "notifications": true,
+          "theme": "dark",
+          "isPrivateProfile": false,
+          "language": "fr"
+        },
+        dreamStats: {
+          "nightmares": 0,
+          "totalDreams": 0,
+          "lucidDreams": 0,
+          "longestStreak": 0,
+          "currentStreak": 0
+        },
+        progression: {
+          "xpNeeded": 1000,
+          "level": 1,
+          "xp": 0,
+          "rank": "Débutant"
+        },
+        social: {
+          "groups": <String>[],
+          "followers": 0,
+          "following": 0
+        },
+      );
+      await usersCollection.doc(userId).set(user.toMap()).then(
+            (value) async {
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setBool("hasMoreInformationToComplete", false);
+        },
+      ).catchError((error) {
+        print("Error adding user: $error");
+        return StateApp.error;
+      });
+      return StateApp.successfullyAddedUser;
+    }
   }
 }

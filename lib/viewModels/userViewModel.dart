@@ -1,8 +1,9 @@
 import 'dart:ffi';
 
+import 'package:dreamary_flutter/models/StateApp.dart';
 import 'package:dreamary_flutter/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide State;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/dreamService.dart';
@@ -32,14 +33,18 @@ class Userviewmodel {
     }
   }
 
-  Future<bool> addUser(String userId, String email, String name, String photoUrl, String bio, String username) async {
-      await firebaseServiceUser.addUser(userId, email, name, photoUrl, bio, username).then(
+  Future<StateApp> addUser(String userId, String email, String name, String photoUrl, String bio, String username) async {
+    StateApp state = StateApp.inProgress;
+    await firebaseServiceUser.addUser(userId, email, name, photoUrl, bio, username).then(
         (value) async {
+          state = value;
+          print(' Utilisateur ajouté avec succès : $value');
+          return value;
         },
       ).catchError((error) {
-        throw Exception("Erreur lors de l'ajout de l'utilisateur : $error");
-        return false;
+        print(" Erreur lors de l'ajout de l'utilisateur : $error");
+        return StateApp.error;
       });
-      return true;
+    return state;
   }
 }
