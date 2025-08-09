@@ -112,6 +112,26 @@ class UserModel {
       'social': social,
     };
   }
+
+  factory UserModel.fromMap(Map<String, dynamic> map) {
+    return UserModel(
+      id: map['id'] ?? '',
+      uid: map['uid'] ?? '',
+      email: map['email'] ?? '',
+      username: map['username'] ?? '',
+      fullName: map['fullName'] ?? '',
+      bio: map['bio'] ?? '',
+      profilePictureUrl: map['profilePictureUrl'] ?? '',
+      tokenFcm: map['tokenFcm'] ?? '',
+      metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
+      preferences: Map<String, dynamic>.from(map['preferences'] ?? {}),
+      dreamStats: Map<String, int>.from(
+        (map['dreamStats'] ?? {}).map((k, v) => MapEntry(k, v is int ? v : int.tryParse(v.toString()) ?? 0)),
+      ),
+      progression: Map<String, dynamic>.from(map['progression'] ?? {}),
+      social: Map<String, dynamic>.from(map['social'] ?? {}),
+    );
+  }
 }
 
 class UserFormNotifier extends StateNotifier<UserModel> {

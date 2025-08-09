@@ -3,11 +3,9 @@ import 'dart:ffi';
 import 'package:dreamary_flutter/models/StateApp.dart';
 import 'package:dreamary_flutter/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart' hide State;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../services/dreamService.dart';
-import '../services/userService.dart';
+import '../providers/userService.dart';
 
 class Userviewmodel {
   final Userservice firebaseServiceUser = Userservice();
@@ -46,5 +44,17 @@ class Userviewmodel {
         return StateApp.error;
       });
     return state;
+  }
+
+  Future<UserModel> getUser(String userId) async {
+    try {
+      UserModel? user = await firebaseServiceUser.getUser(userId);
+      if (user == null) {
+        throw Exception("Utilisateur non trouvé");
+      }
+      return user;
+    } catch (error) {
+      throw Exception("Erreur lors de la récupération des données utilisateur : $error");
+    }
   }
 }

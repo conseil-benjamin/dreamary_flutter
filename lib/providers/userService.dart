@@ -105,4 +105,17 @@ class Userservice {
       return StateApp.successfullyAddedUser;
     }
   }
+
+  Future<UserModel> getUser(String userId) async {
+    try {
+      DocumentSnapshot doc = await usersCollection.doc(userId).get();
+      if (doc.exists) {
+        return UserModel.fromMap(doc.data() as Map<String, dynamic>);
+      } else {
+        throw Exception("User not found");
+      }
+    } catch (error) {
+      throw Exception("Error retrieving user data: $error");
+    }
+  }
 }
