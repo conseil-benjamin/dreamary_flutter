@@ -7,6 +7,7 @@ class RouteNames {
   static const String onBoarding = '/onBoarding';
   static const String addDream = '/add_new_dream';
   static const String profile = '/profile';
+  static const String premiumPresentation = '/premiumPresentation';
   static const String settings = '/settings';
   static const String about = '/about';
   static const String contact = '/contact';

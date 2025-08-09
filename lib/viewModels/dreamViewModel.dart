@@ -1,5 +1,5 @@
 import '../../../models/dream.dart';
-import '../../../services/dreamService.dart';
+import '../providers/dreamService.dart';
 
 class DreamViewModel {
   final Dreamservice firebaseService = Dreamservice();
