@@ -8,6 +8,7 @@ class RouteNames {
   static const String addDream = '/add_new_dream';
   static const String profile = '/profile';
   static const String premiumPresentation = '/premiumPresentation';
+  static const String dreamDetails = '/dream_details';
   static const String settings = '/settings';
   static const String about = '/about';
   static const String contact = '/contact';

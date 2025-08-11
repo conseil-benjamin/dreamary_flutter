@@ -50,73 +50,78 @@ class RecentDreams extends ConsumerWidget{
                   itemCount: dreams.length,
                   itemBuilder: (context, index) {
                     final dream = dreams[index];
-                    return Card(
-                      elevation: 0,
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                dream.title,
-                                style: Theme.of(context).textTheme.titleMedium,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                dream.date != null
-                                    ? DateFormat('dd/MM/yyyy').format(dream.date!)
-                                    : 'Date inconnue',
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              dream.description,
-                              style: Theme.of(context).textTheme.bodyMedium,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.start,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  for (var i = 0; i < dream.moods.length && i < 2; i++)
-                                    if (dream.moods.toList()[i].isNotEmpty)
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 8.0),
-                                        child: Chip(
-                                          backgroundColor: Colors.green[100],
-                                          label: Text(dream.moods.toList()[i]),
-                                        ),
-                                      ),
-                                  const SizedBox(width: 8),
-                                  if (dream.moods.length > 2 )
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.green[500], // Choisis la couleur de fond que tu préfères
-                                        borderRadius: BorderRadius.circular(12), // Optionnel : pour arrondir les coins
-                                      ),
-                                      padding: EdgeInsets.all(4), // Optionnel : pour ajouter un espace autour du texte
-                                      child: Text(
-                                        "+${dream.moods.length - 2}",
-                                      ),
-                                    )
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      )
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/dream_details', arguments: dream);
+                      },
+                        child: Card(
+                            elevation: 0,
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      dream.title,
+                                      style: Theme.of(context).textTheme.titleMedium,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      dream.date != null
+                                          ? DateFormat('dd/MM/yyyy').format(dream.date!)
+                                          : 'Date inconnue',
+                                      style: Theme.of(context).textTheme.bodySmall,
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    dream.description,
+                                    style: Theme.of(context).textTheme.bodyMedium,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.start,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        for (var i = 0; i < dream.moods.length && i < 2; i++)
+                                          if (dream.moods.toList()[i].isNotEmpty)
+                                            Padding(
+                                              padding: const EdgeInsets.only(left: 8.0),
+                                              child: Chip(
+                                                backgroundColor: Colors.green[100],
+                                                label: Text(dream.moods.toList()[i]),
+                                              ),
+                                            ),
+                                        const SizedBox(width: 8),
+                                        if (dream.moods.length > 2 )
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.green[500], // Choisis la couleur de fond que tu préfères
+                                              borderRadius: BorderRadius.circular(12), // Optionnel : pour arrondir les coins
+                                            ),
+                                            padding: EdgeInsets.all(4), // Optionnel : pour ajouter un espace autour du texte
+                                            child: Text(
+                                              "+${dream.moods.length - 2}",
+                                            ),
+                                          )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            )
+                        ),
                     );
                   },
                 );

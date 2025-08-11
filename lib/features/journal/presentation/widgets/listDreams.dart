@@ -32,42 +32,11 @@ class ListDreams extends ConsumerWidget{
               itemCount: dreams.length,
               itemBuilder: (context, index) {
                 final dream = dreams[index];
-                return Card(
-                  margin: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                              dream.title ?? 'Sans titre',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            dream.date != null
-                                ? 'Date: ${dream.date!.toLocal().toIso8601String().substring(0, 10)}'
-                                : 'Date inconnue',
-                          ),
-                        ],
-                      ),
-                      Text(
-                          dream.description ?? 'Sans titre',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurface,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.start,
-                      ),
-                      if (dream.moods.isNotEmpty)
-                        Wrap(
-                          spacing: 2.0,
-                          children: dream.moods.map((emotion) => Chip(label: Text(emotion))).toList(),
-                        ),
-                    ]
-                  ),
+                return GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/dream_details', arguments: dream);
+                    },
+                    child: _dream_Card(dream: dream),
                 );
               },
             );
@@ -75,6 +44,53 @@ class ListDreams extends ConsumerWidget{
             return Center(child: Text('Aucun rêve trouvé.'));
           }
         },
+      ),
+    );
+  }
+}
+
+class _dream_Card extends StatelessWidget {
+  final Dream dream;
+
+  const _dream_Card({required this.dream});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                dream.title ?? 'Sans titre',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              Text(
+                dream.date != null
+                    ? 'Date: ${dream.date!.toLocal().toIso8601String().substring(0, 10)}'
+                    : 'Date inconnue',
+              ),
+            ],
+          ),
+          Text(
+            dream.description ?? 'Sans description',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.start,
+          ),
+          if (dream.moods.isNotEmpty)
+            Wrap(
+              spacing: 2.0,
+              children: dream.moods.map((emotion) => Chip(label: Text(emotion))).toList(),
+            ),
+        ],
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:dreamary_flutter/features/auth/moreInformationAfterRegister/page/moreInformations.dart';
 import 'package:dreamary_flutter/features/auth/presentation/pages/login_screen.dart';
 import 'package:dreamary_flutter/features/auth/presentation/pages/sign_up_screeb.dart';
+import 'package:dreamary_flutter/features/dreamDetails/dreamDetails.dart';
 import 'package:dreamary_flutter/features/homeScreen/presentation/page/homeScreen.dart';
 import 'package:dreamary_flutter/features/journal/presentation/page/journal.dart';
 import 'package:dreamary_flutter/features/premium/pages/premiumPresentation.dart';
@@ -8,6 +9,7 @@ import 'package:dreamary_flutter/features/profile/presentation/pages/profile.dar
 import 'package:dreamary_flutter/features/settings/page/settings.dart';
 import 'package:flutter/material.dart';
 import '../features/onBoarding/presentation/page/onBoarding.dart';
+import '../models/dream.dart';
 import 'route_names.dart';
 import 'package:dreamary_flutter/features/newDream/presentation/pages/add_new_dream.dart';
 
@@ -34,6 +36,9 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const Profile());
       case RouteNames.premiumPresentation:
         return MaterialPageRoute(builder: (_) => const PremiumScreen());
+      case RouteNames.dreamDetails:
+        final dream = settings.arguments as Dream;
+        return MaterialPageRoute(builder: (_) => DreamDetails(dream: dream));
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
