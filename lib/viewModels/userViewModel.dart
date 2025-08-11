@@ -18,14 +18,15 @@ class Userviewmodel {
       }
       // Vérifier si l'utilisateur existe déjà dans la base de données
       bool userExists = await firebaseServiceUser.checkIfEmailIsAlreadyUsed(user.user?.email ?? '');
+      print('Utilisateur existe déjà : $userExists');
       if (!userExists) {
         // Si l'utilisateur n'existe pas, l'ajouter
-
         final prefs = await SharedPreferences.getInstance();
         await prefs.setBool("hasMoreInformationToComplete", true);
         await prefs.setStringList("userInformations", [user.user?.email ?? '', user.user?.displayName ?? '', user.user?.photoURL ?? '']);
+        return true;
       }
-      return true;
+      return false;
     } catch (error) {
       throw Exception("Erreur lors de la récupération des données utilisateur : $error");
     }

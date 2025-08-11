@@ -12,18 +12,13 @@ class Userservice {
 
 
   Future<bool> checkIfEmailIsAlreadyUsed(String email) async {
-    usersCollection.where("email", isEqualTo: email).get()
-        .then((QuerySnapshot querySnapshot) {
-      if (querySnapshot.docs.isNotEmpty) {
-        return true; // Email already exists
-      } else {
-        return false; // Email does not exist
-      }
-    }).catchError((error) {
+    try {
+      QuerySnapshot querySnapshot = await usersCollection.where("email", isEqualTo: email).get();
+      return querySnapshot.docs.isNotEmpty; // Retourne true si des documents existent
+    } catch (error) {
       print("Error checking email: $error");
-      return false; // Error occurred, assume email does not exist
-    });
-    return false; // Default return value, should be replaced by the actual logic
+      return false; // En cas d'erreur, retourne false
+    }
   }
 
   Future<UserCredential> signInWithGoogle() async {

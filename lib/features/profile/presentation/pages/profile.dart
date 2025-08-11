@@ -38,6 +38,7 @@ class Profile extends ConsumerWidget {
                   Headerprofile(userData: userData),
                   const SizedBox(height: 20),
                   StatsProfile(userData: userData),
+                  const SizedBox(height: 20),
                   userData.metadata['isPremium'] == true
                       ? const Text('Vous êtes membre Premium', style: TextStyle(fontSize: 18))
                       : BuyPremium()

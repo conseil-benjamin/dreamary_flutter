@@ -42,7 +42,6 @@ class Homescreen extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.settings, color: Colors.white, size: 20),
             onPressed: () {
-              FirebaseAuth.instance.signOut();
               Navigator.of(context).pushReplacementNamed('/settings');
             },
           ),
